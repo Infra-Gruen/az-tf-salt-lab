@@ -10,7 +10,7 @@ Der terraform Code dieses Repositorys rollt die Ressourcen für einen kleinen Sa
 # Voraussetzungen
 
 ### Azure
-Es sollte Zugriff auf den Automatisierungshelden Tenant in Azure vorhanden sein. Idealerweise wurde bereits ein ServiceUserPrincipal angelegt und mit den notwendigen Berechtigungen ausgestattet.
+Es sollte Zugriff auf den Tenant in Azure vorhanden sein. Idealerweise wurde bereits ein ServiceUserPrincipal angelegt und mit den notwendigen Berechtigungen ausgestattet.
 
 ### Terraform
 Die Inhalte dieses Repositorys müssen lokal verfügbar sein.
@@ -22,7 +22,7 @@ Auf dem Gerät, auf dem das Deployment ausgeführt wird, muss terraform installi
 
 #### Bei Bedarf: Ausrollen des zweiten Minions
 Falls der zweite Minion benötigt wird, muss die Kommentierung des Codes aufgehoben werden. D.h. die '#' müssen vor den Codezeilen entfernt werden.
-Der Code für den zweiten Minio beginnt nach dem Kommentar ```###### salt-minion2 #######```
+Der Code für den zweiten Minion beginnt nach dem Kommentar ```###### salt-minion2 #######```
 
 ### Initiieren des Deployments
 ```
