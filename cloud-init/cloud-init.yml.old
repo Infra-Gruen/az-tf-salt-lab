@@ -1,0 +1,55 @@
+#cloud-config
+users:
+  - default
+  - name: testadmin
+    primary_group: testadmin
+    groups: sudo, users, admin
+    shell: /bin/bash
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    passwd: #redacted
+    ssh-authorized-keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDHuvt2BGVf40YusS/X3yVD9GtkFxLoKri4O2MPq9R9HEIhB8c39IHxxMYd2GQ/5Q8grRC+leN5mwSXl0Yw8xOPgYn3mL8GYzzAIcl5PIjOuaW7eBsvi9ufSrEtFKEcUMsbtbnwSXLZASFOdqbN3/Dq9SlFkG/RCbu2LV08xaA4DLFghv6WxEt6RWJru12sdu36tqAXWGvk2QNMqdvvMgRd2E63XhHkjVN6H2vafc/XbUGllEQFpKybZNRBxjex/E4F8ihIycS6MvZaXPgdj16+mSVVoMP3MaHJ6V2ZV4waAA6jFYPPQwAHS5h/m08D9MXe30wEQ6X/FFgWfWxQLtAvmoVeZBfz1o3YcieJY/F67Q6obVhbMYvLCk1qmK77sqNQvuI3HZyTjCc45ZOWZxgq73dby1T1eY5OBNyam0ekDxocQ2S2PhphptHTdnAjxw1zsDWY9uFNIt/VwQn8D/+Ira23BQ98xn8R1YKGzzdCsGWgvhgHbkBv8/PwKu7bn1M=
+
+
+
+write_files:
+  - owner: root
+    path: /opt/first-start-st1.sh
+    permissions: '0644'
+    content: |
+      #!/bin/bash
+      sudo curl -fsSL -o /etc/apt/keyrings/salt-archive-keyring-2023.gpg https://repo.saltproject.io/salt/py3/ubuntu/22.04/amd64/SALT-PROJECT-GPG-PUBKEY-2023.gpg
+      echo "deb [signed-by=/etc/apt/keyrings/salt-archive-keyring-2023.gpg arch=amd64] https://repo.saltproject.io/salt/py3/ubuntu/22.04/amd64/latest jammy main" | sudo tee /etc/apt/sources.list.d/salt.list
+      sudo apt-get -y update
+  - owner: root
+    path: /opt/first-start-st2.sh
+    permissions: '0644'
+    content: |
+      #!/bin/bash
+      sudo apt-get install -y salt-master
+      sudo apt-get install -y salt-ssh
+      sudo apt-get install -y salt-syndic
+      sudo apt-get install -y salt-cloud
+      sudo apt-get install -y salt-api
+  - owner: root
+    path: /opt/first-start-st3.sh
+    permissions: '0644'
+    content: |
+      #!/bin/bash
+      sudo chown -R salt /etc/salt/
+      sudo systemctl enable salt-master && sudo systemctl start salt-master
+      sudo systemctl enable salt-syndic && sudo systemctl start salt-syndic
+      sudo systemctl enable salt-api && sudo systemctl start salt-api
+
+package_upgrade: true
+packages:
+  - nginx
+  - neofetch
+  -
+runcmd:
+  - sudo chmod +X /opt/first-start-st1.sh
+  - sudo chmod +X /opt/first-start-st2.sh
+  - sudo chmod +X /opt/first-start-st3.sh
+  - sudo bash /opt/first-start-st1.sh
+  - sudo bash /opt/first-start-st2.sh
+  - sudo bash /opt/first-start-st3.sh
